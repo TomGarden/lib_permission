@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LibPermission</string>
+
+    <!--PermissionUtil Dialog-->
+    <string name="tip">提示</string>
+    <string name="negative">不授权</string>
+    <string name="neutral">了解了</string>
+    <string name="positive">授权</string>
+    <string name="go_authorization">去授权</string>
+    <string name="feature_not_available">如果您拒绝授权,本功能将无法使用。</string>
+
+</resources>

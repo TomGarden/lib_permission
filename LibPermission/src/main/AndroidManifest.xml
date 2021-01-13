@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.github.tomgarden.lib.permission">
+
+    <application>
+        <activity
+            android:name=".PermissionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+</manifest>
