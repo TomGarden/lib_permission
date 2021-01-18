@@ -2,8 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: './ext.gradle'
-//apply from: './bintray.release.gradle'
+apply from: 'publish_github_packages.gradle'
 
 
 android {

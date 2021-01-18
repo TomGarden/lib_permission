@@ -1,4 +1,4 @@
-package io.github.tomgarden.lib.permission
+package io.github.tomgarden.lib.permission.demo
 
 import org.junit.Test
 

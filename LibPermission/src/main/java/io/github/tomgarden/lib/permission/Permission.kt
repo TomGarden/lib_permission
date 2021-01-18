@@ -3,11 +3,8 @@ package io.github.tomgarden.lib.permission
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Bundle
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,17 +21,18 @@ import androidx.core.content.ContextCompat
 class Permission(context: Context, val permissionCall: PermissionCall) {
 
     private val TAG = "tom.work@foxmail.com"
-    private lateinit var sharedPreferences: SharedPreferences
+    private val sharedPreferences by lazy {
+        context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+    }
     private val FILE_NAME = BuildConfig.LIBRARY_PACKAGE_NAME
+    val REQUEST_CODE: Int = 0/*关于这个 code 如果有需求我们再做详究,当前设置此属性不应被过多使用，要用 「mRequestCode」*/
+    private var mRequestCode: Int = REQUEST_CODE
 
-    init {
-        sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+    companion object {
+        var PERMISSION_INSTANCE: Permission? = null
     }
 
     constructor(context: Context) : this(context, PermissionCall())
-
-    val REQUEST_CODE: Int = 0/*关于这个 code 如果有需求我们再做详究,当前设置此属性不应被过多使用，要用 「mRequestCode」*/
-    private var mRequestCode: Int = REQUEST_CODE
 
 
     /*这三个列表在权限请求发起前会被明确区分出来*/
@@ -104,11 +102,9 @@ class Permission(context: Context, val permissionCall: PermissionCall) {
         }
 
         when (requestFlag) {
-            RequestFlag.FIRST -> ActivityCompat.requestPermissions(
-                activity,
-                allPermissionAry,
-                mRequestCode
-            )
+            RequestFlag.FIRST -> {
+                ActivityCompat.requestPermissions(activity, allPermissionAry, mRequestCode)
+            }
             RequestFlag.SECOND -> {
                 permissionCall.secondRationale?.invoke(
                     this,
@@ -117,108 +113,9 @@ class Permission(context: Context, val permissionCall: PermissionCall) {
                     grantedRequestList,
                     firstRequestList,
                     secondRequestList
-                )
-                    ?: let {
-                        ActivityCompat.requestPermissions(
-                            activity,
-                            allPermissionAry,
-                            mRequestCode
-                        )
-                    }
-            }
-            RequestFlag.THIRD -> {
-                permissionCall.thirdRationale?.invoke(
-                    this,
-                    activity,
-                    allPermissionList,
-                    grantedRequestList,
-                    firstRequestList,
-                    secondRequestList,
-                    thirdRequestList
-                )
-            }
-            RequestFlag.DEF -> permissionCall.grantedAllPermissions?.invoke(allPermissionList)
-        }
-
-        return this
-    }
-
-    /**
-     * 请求权限入口函数，从调用这个方法开始就开始了权限请求流程了
-     *
-     * 这种请求方式无需设置 [Activity.onRequestPermissionsResult]
-     */
-    private fun request(
-        activity: Activity,
-        vararg allPermissionAry: String,
-        requestCode: Int = REQUEST_CODE
-    ): Permission {
-        allPermissionList.clear()
-        firstRequestList.clear()
-        secondRequestList.clear()
-        thirdRequestList.clear()
-        grantedRequestList.clear()
-
-        mRequestCode = requestCode
-
-        allPermissionList.addAll(allPermissionAry)
-        /*
-        * [requestFlag]值的意义
-        *        「首次权限请求」权限列表中的所有权限都是第一次请求
-        *        「二次权限请求」权限列表中的所有权限中包含二次请求的权限
-        *        「三次权限请求」权限列表中的所有权限中包含三次请求的权限
-        */
-        var requestFlag: RequestFlag = RequestFlag.DEF
-
-        allPermissionAry.forEach { permission ->
-            when (ContextCompat.checkSelfPermission(activity, permission)) {
-                PackageManager.PERMISSION_DENIED -> {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                        /*二次请求权限*/
-                        secondRequestList.add(permission)
-                        if (requestFlag.flag < RequestFlag.SECOND.flag) {
-                            requestFlag = RequestFlag.SECOND
-                        }
-                    } else if (sharedPreferences.getBoolean(permission, false)) {
-                        /*三次请求权限*/
-                        thirdRequestList.add(permission)
-                        if (requestFlag.flag < RequestFlag.THIRD.flag) {
-                            requestFlag = RequestFlag.THIRD
-                        }
-                    } else {
-                        /*首次请求权限*/
-                        firstRequestList.add(permission)
-                        if (requestFlag.flag < RequestFlag.FIRST.flag) {
-                            requestFlag = RequestFlag.FIRST
-                        }
-                    }
+                ) ?: let {
+                    ActivityCompat.requestPermissions(activity, allPermissionAry, mRequestCode)
                 }
-                PackageManager.PERMISSION_GRANTED -> grantedRequestList.add(permission)
-            }
-        }
-
-        when (requestFlag) {
-            RequestFlag.FIRST -> ActivityCompat.requestPermissions(
-                activity,
-                allPermissionAry,
-                mRequestCode
-            )
-            RequestFlag.SECOND -> {
-                permissionCall.secondRationale?.invoke(
-                    this,
-                    activity,
-                    allPermissionList,
-                    grantedRequestList,
-                    firstRequestList,
-                    secondRequestList
-                )
-                    ?: let {
-                        ActivityCompat.requestPermissions(
-                            activity,
-                            allPermissionAry,
-                            mRequestCode
-                        )
-                    }
             }
             RequestFlag.THIRD -> {
                 permissionCall.thirdRationale?.invoke(
@@ -407,6 +304,3 @@ class Permission(context: Context, val permissionCall: PermissionCall) {
     //endregion 本地化工具方法
 
 }
-
-lateinit var PERMISSION_INSTANCE: Permission
-

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 
 /**
@@ -34,7 +35,10 @@ class PermissionActivity : Activity() {
         )
         window.attributes.alpha = 0f
 
-        PERMISSION_INSTANCE.request(this)
+        Permission.PERMISSION_INSTANCE?.request(this)
+
+        Log.e("asdfasdf", "asdfasdf")
+
     }
 
 
@@ -44,7 +48,12 @@ class PermissionActivity : Activity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        PERMISSION_INSTANCE.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Permission.PERMISSION_INSTANCE?.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults
+        )
+        Permission.PERMISSION_INSTANCE = null
         finish()
     }
 }
