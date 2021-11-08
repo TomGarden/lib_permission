@@ -1,12 +1,15 @@
 package io.github.tomgarden.lib.permission.demo
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.tomgarden.lib.log.Logger
 import io.github.tomgarden.lib.permission.Permission
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +60,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 .grantedPartPermissions { }
                 .deniedPartPermissions { }
-                .grantedAllPermissions { }
+                .grantedAllPermissions {
+                    val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE) //用来打开相机的Intent
+                    if (takePhotoIntent.resolveActivity(packageManager) != null) { //这句作用是如果没有相机则该应用不会闪退，要是不加这句则当系统没有相机应用的时候该应用会闪退
+                        startActivityForResult(takePhotoIntent, 2) //启动相机
+                    }
+                }
                 .deniedAllPermissions { }
                 .requestPermissionsResult { allPermissionList, grantedPermissions, deniedPermissions ->
                     val message = "requestPermissionsResult " +
@@ -67,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
                     Logger.e(message)
                 }
-                .request(this)
+                //.request(this)
                 .requestSimple(this)
         }
     }

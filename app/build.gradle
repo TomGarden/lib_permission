@@ -43,9 +43,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    //implementation project(path: ':LibPermission')
-    implementation 'io.github.tomgarden:lib_permission:0.3.0'
+    //implementation project(path: ":lib_permission")
+    implementation project(path: ":$lib_permission_project_name:lib_permission")
+    //implementation 'io.github.tomgarden:lib_permission:0.3.0'
     implementation 'io.github.tomgarden:LibLog:0.1.12'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 }
 
 //ModuleName/build.gradle   OR    ProjectName/build.gradle

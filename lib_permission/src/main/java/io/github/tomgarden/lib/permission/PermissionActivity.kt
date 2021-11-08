@@ -48,6 +48,8 @@ class PermissionActivity : Activity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        /*如果产生内存泄露的问题可以考虑将回调调用移动到 onDestroy 中触发*/
         Permission.PERMISSION_INSTANCE?.onRequestPermissionsResult(
             requestCode,
             permissions,
