@@ -19,7 +19,7 @@
 
 我认为的权限请求应该是这样的流程
 
-![permission.jpg](LibPermission/document/permission.png)
+![permission.jpg](lib_permission/document/permission.png)
 
 
 添加依赖
