@@ -30,6 +30,12 @@ class Permission(context: Context, val permissionCall: PermissionCall) {
 
     companion object {
         var PERMISSION_INSTANCE: Permission? = null
+        fun clearSelf() {
+            /**如果发起真正的权限请求在 onRequestPermissionsResult 清理自身
+             * 如果不发起权限请求 , 在回调函数执行完毕后清理自身
+             * */
+            PERMISSION_INSTANCE = null
+        }
     }
 
     constructor(context: Context) : this(context, PermissionCall())
@@ -127,8 +133,14 @@ class Permission(context: Context, val permissionCall: PermissionCall) {
                     secondRequestList,
                     thirdRequestList
                 )
+
+                clearSelf()
             }
-            RequestFlag.DEF -> permissionCall.grantedAllPermissions?.invoke(allPermissionList)
+            RequestFlag.DEF -> {
+                permissionCall.grantedAllPermissions?.invoke(allPermissionList)
+
+                clearSelf()
+            }
         }
 
         return this

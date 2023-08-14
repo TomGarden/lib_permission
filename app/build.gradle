@@ -1,9 +1,13 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
+//    id 'kotlin-android'
+//    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
+    namespace 'io.github.tomgarden.lib.permission.demo'
+
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -24,42 +28,32 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
+//    kotlin {
+//        // Or shorter:
+//        jvmToolchain(17)
+//    }
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     //implementation project(path: ":lib_permission")
     implementation project(path: ":$lib_permission_project_name:lib_permission")
     //implementation 'io.github.tomgarden:lib_permission:0.3.0'
     implementation 'io.github.tomgarden:LibLog:0.1.12'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
-}
-
-//ModuleName/build.gradle   OR    ProjectName/build.gradle
-repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/TomGarden/lib_permission")
-
-        credentials {
-            //不限的 github 账户名
-            username = System.getenv("TOMGARADEN_USERNAME")
-            //与 github 账户名成对的 具有 read:packages 权限的 token
-            password = System.getenv("TOMGARADEN_READ_PACKAGES_TOKEN")
-        }
-    }
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 }

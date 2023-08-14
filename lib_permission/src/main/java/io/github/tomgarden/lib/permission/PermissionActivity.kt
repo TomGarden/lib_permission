@@ -55,7 +55,7 @@ class PermissionActivity : Activity() {
             permissions,
             grantResults
         )
-        Permission.PERMISSION_INSTANCE = null
+        Permission.clearSelf()
         finish()
     }
 }
