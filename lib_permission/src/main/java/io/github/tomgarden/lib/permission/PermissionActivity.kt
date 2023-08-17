@@ -55,7 +55,6 @@ class PermissionActivity : Activity() {
             permissions,
             grantResults
         )
-        Permission.clearSelf()
-        finish()
+        Permission.clearSelf(this)
     }
 }

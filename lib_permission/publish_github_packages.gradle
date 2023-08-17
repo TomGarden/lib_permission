@@ -1,8 +1,8 @@
 apply plugin: 'maven-publish'
 
 ext {
-    moduleVersionCode = 4
-    moduleVersionName = '0.4.0'
+    moduleVersionCode = 5
+    moduleVersionName = '0.5.0'
     moduleName = 'lib_permission'
 
     mavenGroupId = 'io.github.tomgarden'
