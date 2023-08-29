@@ -1,4 +1,3 @@
-暂未投入使用, 投入使用前需要做一次测试, 谨防异常
 
 写这段代码前重点参考了 [PermissionsDispatcher](https://github.com/permissions-dispatcher/PermissionsDispatcher)
 
