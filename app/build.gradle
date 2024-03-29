@@ -54,6 +54,6 @@ dependencies {
     //implementation project(path: ":lib_permission")
     implementation project(path: ":$lib_permission_project_name:lib_permission")
     //implementation 'io.github.tomgarden:lib_permission:0.3.0'
-    implementation 'io.github.tomgarden:LibLog:0.1.12'
+    implementation 'com.github.Tomgarden:lib_log:v0.1.33'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 }

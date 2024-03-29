@@ -1,26 +1,29 @@
-//apply plugin: 'com.android.library'
-//apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-android-extensions'
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
-apply from: 'publish_github_packages.gradle'
+//apply from: 'publish_github_packages.gradle'
+
+def GROUP_ID = 'com.github.TomGarden'
+def VERSION = '0.5.1'
+
+group = "$GROUP_ID"
+version = "$VERSION"
 
 
 android {
 
     namespace 'io.github.tomgarden.lib.permission'
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
 
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode moduleVersionCode
-        versionName moduleVersionName
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -61,3 +64,33 @@ dependencies {
 }
 
 
+
+// 用于打包源代码的任务
+task andSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+// 在构建任务之前执行源代码打包任务
+build.dependsOn(andSourcesJar)
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+
+                from components.release
+                groupId = "$GROUP_ID"
+                artifactId = 'lib_permission'
+                version = "$VERSION"
+
+                // 添加源码发布
+                //artifact andSourcesJar
+                artifact file("$buildDir/libs/${project.name}-$VERSION-sources.jar")
+            }
+        }
+    }
+
+}

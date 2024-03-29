@@ -17,17 +17,6 @@ dependencyResolutionManagement {
         maven { url 'https://maven.google.com' }
         maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/'}
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
-
-        maven {
-            url = uri("https://maven.pkg.github.com/TomGarden/lib_permission")
-
-            credentials {
-                //不限的 github 账户名
-                username = System.getenv("TOMGARADEN_USERNAME")
-                //与 github 账户名成对的 具有 read:packages 权限的 token
-                password = System.getenv("TOMGARADEN_READ_PACKAGES_TOKEN")
-            }
-        }
     }
 }
 
